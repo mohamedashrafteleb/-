@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أخبار مصر - منصة شاملة</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #007BFF;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    .author {
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    nav {
+      background-color: #0056b3;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    nav select, nav button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    nav button:hover, nav select:hover {
+      background-color: #0056b3;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .news-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .news-item:last-child {
+      border-bottom: none;
+    }
+
+    .news-title {
+      font-size: 1.5rem;
+      color: #0056b3;
+    }
+
+    .news-content {
+      font-size: 1rem;
+      margin-top: 5px;
+    }
+
+    .news-date {
+      font-size: 0.9rem;
+      color: #888;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>أخبار مصر - منصة شاملة</h1>
+    <p class="author">تم كتابته بواسطة محمد أشرف</p>
+  </header>
+  <nav>
+    <select id="year-select">
+      <option value="all">اختر السنة</option>
+      <option value="2020">2020</option>
+      <option value="2021">2021</option>
+      <option value="2022">2022</option>
+      <option value="2023">2023</option>
+      <option value="2024">2024</option>
+    </select>
+    <select id="category-select">
+      <option value="all">اختر الفئة</option>
+      <option value="politics">السياسة</option>
+      <option value="economy">الاقتصاد</option>
+      <option value="sports">الرياضة</option>
+    </select>
+    <button onclick="filterNews()">عرض الأخبار</button>
+    <button onclick="showAllNews()">عرض الكل</button>
+  </nav>
+  <div class="container" id="news-container">
+    <!-- الأخبار ستظهر هنا -->
+  </div>
+
+  <script>
+    // الأخبار المخزنة
+    const news = [
+      // أخبار 2020
+      {
+        title: "بدء تنفيذ العاصمة الإدارية الجديدة",
+        content: "بدأت مصر العمل على تنفيذ العاصمة الإدارية الجديدة وسط تحديات كبيرة.",
+        date: "2020-03-01",
+        year: "2020",
+        category: "economy"
+      },
+      {
+        title: "تأثير جائحة كورونا على الاقتصاد",
+        content: "أثرت جائحة كورونا بشكل كبير على الاقتصاد المصري والعالمي.",
+        date: "2020-06-15",
+        year: "2020",
+        category: "economy"
+      },
+      // أخبار 2021
+      {
+        title: "افتتاح مشروعات تنموية جديدة",
+        content: "افتتحت مصر عدة مشروعات قومية في مجال الزراعة والطاقة.",
+        date: "2021-02-20",
+        year: "2021",
+        category: "economy"
+      },
+      {
+        title: "منتخب مصر يحقق نتائج مميزة",
+        content: "منتخب مصر يحقق انتصارات هامة في تصفيات كأس العالم.",
+        date: "2021-09-12",
+        year: "2021",
+        category: "sports"
+      },
+      // أخبار 2022
+      {
+        title: "إطلاق أول محطة طاقة نووية في الضبعة",
+        content: "أعلنت مصر عن بدء العمل في أول محطة نووية لإنتاج الكهرباء في الضبعة.",
+        date: "2022-04-10",
+        year: "2022",
+        category: "economy"
+      },
+      {
+        title: "عودة السياحة بعد الجائحة",
+        content: "شهدت مصر زيادة ملحوظة في أعداد السياح بعد تعافي القطاع من آثار كورونا.",
+        date: "2022-07-25",
+        year: "2022",
+        category: "economy"
+      },
+      // أخبار 2023
+      {
+        title: "إطلاق مشروع القطار الكهربائي السريع",
+        content: "تم إطلاق أول مراحل القطار الكهربائي الذي يربط القاهرة بالعاصمة الإدارية.",
+        date: "2023-05-14",
+        year: "2023",
+        category: "economy"
+      },
+      {
+        title: "مصر تستضيف قمة المناخ",
+        content: "استضافت مصر قمة المناخ العالمية لمناقشة التحديات البيئية.",
+        date: "2023-11-06",
+        year: "2023",
+        category: "politics"
+      },
+      // أخبار 2024
+      {
+        title: "الانتخابات الرئاسية المصرية 2024",
+        content: "انطلاق الانتخابات الرئاسية في مصر وسط متابعة محلية ودولية واسعة.",
+        date: "2024-03-15",
+        year: "2024",
+        category: "politics"
+      },
+      {
+        title: "منتخب مصر يستعد لأولمبياد باريس",
+        content: "منتخب مصر يواصل تدريباته استعدادًا للمشاركة في أولمبياد باريس 2024.",
+        date: "2024-07-10",
+        year: "2024",
+        category: "sports"
+      }
+    ];
+
+    const newsContainer = document.getElementById("news-container");
+
+    // عرض كل الأخبار
+    function showAllNews() {
+      newsContainer.innerHTML = "";
+      news.forEach(item => {
+        newsContainer.innerHTML += `
+          <div class="news-item">
+            <h2 class="news-title">${item.title}</h2>
+            <p class="news-content">${item.content}</p>
+            <p class="news-date">التاريخ: ${item.date}</p>
+          </div>
+        `;
+      });
+    }
+
+    // تصفية الأخبار حسب السنة والفئة
+    function filterNews() {
+      const year = document.getElementById("year-select").value;
+      const category = document.getElementById("category-select").value;
+
+      newsContainer.innerHTML = "";
+      const filteredNews = news.filter(item => {
+        return (year === "all" || item.year === year) && (category === "all" || item.category === category);
+      });
+
+      if (filteredNews.length > 0) {
+        filteredNews.forEach(item => {
+          newsContainer.innerHTML += `
+            <div class="news-item">
+              <h2 class="news-title">${item.title}</h2>
+              <p class="news-content">${item.content}</p>
+              <p class="news-date">التاريخ: ${item.date}</p>
+            </div>
+          `;
+        });
+      } else {
+        newsContainer.innerHTML = "<p>لا توجد أخبار مطابقة لبحثك.</p>";
+      }
+    }
+
+    // عرض كل الأخبار عند تحميل الصفحة
+    showAllNews();
+  </script>
+</body>
+</html>
